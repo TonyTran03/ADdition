@@ -1,36 +1,28 @@
-import React, { useState, useRef, useEffect, createRef } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useState, useRef } from "react";
 import "./App.css";
-import { useThree, Canvas } from "@react-three/fiber";
-import {
-  OrbitControls,
-  TransformControls,
-  ContactShadows,
-  useGLTF,
-  useCursor,
-  Environment,
-} from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Environment, Edges } from "@react-three/drei";
 import { DuckTruck } from "./component/DuckTruck.jsx";
 import SidePanelToggle from "./component/SidePanelToggle.jsx";
 import FlowEditor from "./component/FlowEdit.jsx";
 import { Suzanne } from "./component/Suzanne.jsx";
 import DepthAxis from "./component/Axis.jsx";
-
+import SnapPlane from "./component/grid/SnapPlane.jsx";
+import CustomOrbitControls from "./component/grid/CustomOrbitControls.jsx";
+import { editorState } from "./state/valtioStore"; // Adjust path
+import { useSnapshot } from "valtio";
 function App() {
   const [activePanel, setActivePanel] = useState("blocks"); // default panel
   const [selectedModelId, setSelectedModelId] = useState("ducktruck");
   const [placedModels, setPlacedModels] = useState([]);
-  const orbitRef = useRef();
-  const [isTransforming, setIsTransforming] = useState(false);
-
+  const snap = useSnapshot(editorState);
   //  {creating a new model instance in real-time}
   const addModel = () => {
+    const id = Date.now();
     const newModel = {
-      id: Date.now(),
+      id,
       type: selectedModelId,
-      position: [Math.random() * 2 - 1, 0, Math.random() * 2 - 1],
-      ref: React.createRef(),
+      position: [0, 0, 0], // center by default
     };
     setPlacedModels((prev) => [...prev, newModel]);
   };
@@ -127,30 +119,31 @@ function App() {
                 intensity={1}
                 castShadow
               />
-
+              <SnapPlane gridSize={1} />
               {/* Environment & Controls */}
               <Environment preset="sunset" />
-              <OrbitControls
-                ref={orbitRef}
-                enabled={!isTransforming}
-                minPolarAngle={Math.PI / 4}
-                maxPolarAngle={Math.PI / 1.4} // Limit vertical rotation
-                minAzimuthAngle={-Math.PI / 4} // -45 degrees left
-                maxAzimuthAngle={Math.PI / 4} // +45 degrees right
-              />
-              {placedModels.map(({ id, type, position, ref }) => {
+              <CustomOrbitControls />
+
+              {placedModels.map(({ id, type, position }) => {
                 const model = models.find((m) => m.id === type);
                 const Component = model?.Component;
+                const selectedId = `model-${id}`;
+
                 return Component ? (
-                  <TransformControls
+                  <group
                     key={id}
-                    object={ref.current}
-                    mode="translate"
-                    onMouseDown={() => setIsTransforming(true)}
-                    onMouseUp={() => setIsTransforming(false)}
+                    name={selectedId}
+                    position={position}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      editorState.current = selectedId;
+                    }}
                   >
-                    <Component ref={ref} position={position} scale={0.5} />
-                  </TransformControls>
+                    <Component scale={0.5} />
+                    {snap.current === selectedId && (
+                      <Edges scale={55} color="hotpink" />
+                    )}
+                  </group>
                 ) : null;
               })}
             </Canvas>

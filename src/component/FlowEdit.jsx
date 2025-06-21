@@ -70,6 +70,7 @@ function FlowEditorContent() {
         onConnect={onConnect}
         onDrop={onDrop}
         onDragOver={onDragOver}
+        style={{ width: "100%", height: "100%" }}
         // fitView
       >
         <Background />
