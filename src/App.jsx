@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, createRef } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -22,15 +22,16 @@ function App() {
   const [placedModels, setPlacedModels] = useState([]);
   const orbitRef = useRef();
   const [isTransforming, setIsTransforming] = useState(false);
+
+  //  {creating a new model instance in real-time}
   const addModel = () => {
-    setPlacedModels((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        type: selectedModelId,
-        position: [Math.random() * 2 - 1, 0, Math.random() * 2 - 1],
-      },
-    ]);
+    const newModel = {
+      id: Date.now(),
+      type: selectedModelId,
+      position: [Math.random() * 2 - 1, 0, Math.random() * 2 - 1],
+      ref: React.createRef(),
+    };
+    setPlacedModels((prev) => [...prev, newModel]);
   };
 
   const models = [
@@ -128,19 +129,22 @@ function App() {
               {/* Environment & Controls */}
               <Environment preset="sunset" />
               <OrbitControls ref={orbitRef} enabled={!isTransforming} />
-              <TransformControls
-                mode="translate"
-                onMouseDown={() => setIsTransforming(true)}
-                onMouseUp={() => setIsTransforming(false)}
-              >
-                {placedModels.map(({ id, type, position }) => {
-                  const model = models.find((m) => m.id === type);
-                  const Component = model?.Component;
-                  return Component ? (
-                    <Component key={id} position={position} scale={0.5} />
-                  ) : null;
-                })}
-              </TransformControls>
+
+              {placedModels.map(({ id, type, position, ref }) => {
+                const model = models.find((m) => m.id === type);
+                const Component = model?.Component;
+                return Component ? (
+                  <TransformControls
+                    key={id}
+                    object={ref.current}
+                    mode="translate"
+                    onMouseDown={() => setIsTransforming(true)}
+                    onMouseUp={() => setIsTransforming(false)}
+                  >
+                    <Component ref={ref} position={position} scale={0.5} />
+                  </TransformControls>
+                ) : null;
+              })}
             </Canvas>
           </div>
         </div>
