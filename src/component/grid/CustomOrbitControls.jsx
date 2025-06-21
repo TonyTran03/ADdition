@@ -13,8 +13,8 @@ export default function CustomOrbitControls() {
       enableRotate={!snap.current} // disable rotate when a model is selected
       enablePan={!snap.current}
       enableZoom={true}
-      minPolarAngle={Math.PI / 4}
-      maxPolarAngle={Math.PI / 1.4}
+      minPolarAngle={-Math.PI / 4}
+      maxPolarAngle={Math.PI / 2.1}
       minAzimuthAngle={-Math.PI / 4}
       maxAzimuthAngle={Math.PI / 4}
       domElement={gl.domElement}

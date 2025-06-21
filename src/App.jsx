@@ -7,7 +7,6 @@ import SidePanelToggle from "./component/SidePanelToggle.jsx";
 import FlowEditor from "./component/FlowEdit.jsx";
 import { Suzanne } from "./component/Suzanne.jsx";
 import DepthAxis from "./component/Axis.jsx";
-import SnapPlane from "./component/grid/SnapPlane.jsx";
 import CustomOrbitControls from "./component/grid/CustomOrbitControls.jsx";
 import { editorState } from "./state/valtioStore";
 import { useSnapshot } from "valtio";
@@ -124,14 +123,14 @@ export default function App() {
         <div className="flex-1 relative">
           <Canvas
             className="w-full h-full"
-            camera={{ position: [-1, -4, 36], fov: 60 }}
+            camera={{ position: [0, 0, 36], fov: 60 }}
             shadows
           >
             {/* Wrap all scene nodes in one group */}
             <group key="scene">
               <gridHelper
                 args={[32, 16, "#444", "#888"]}
-                rotation={[-Math.PI / 1.7, 0, 0]}
+                rotation={[0, 0, 0]}
               />
               <DepthAxis length={16} color="white" />
               <ambientLight intensity={0.5} />
