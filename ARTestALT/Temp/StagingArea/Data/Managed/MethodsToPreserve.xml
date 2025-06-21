@@ -1,0 +1,24 @@
+<linker>
+	<assembly fullname="UnityEngine.AnimationModule" ignoreIfMissing="1">
+		<type fullname="UnityEngine.Animator">
+			<method name="Play"/>
+			<method name="Play"/>
+		</type>
+	</assembly>
+	<assembly fullname="UnityEngine.AudioModule" ignoreIfMissing="1">
+		<type fullname="UnityEngine.AudioSource">
+			<method name="Play"/>
+		</type>
+	</assembly>
+	<assembly fullname="UnityEngine.CoreModule" ignoreIfMissing="1">
+		<type fullname="UnityEngine.GameObject">
+			<method name="SetActive"/>
+		</type>
+	</assembly>
+	<assembly fullname="Zappar.UAR" ignoreIfMissing="1">
+		<type fullname="Zappar.ZapparInstantTrackingTarget">
+			<method name="PlaceTrackerAnchor"/>
+			<method name="PlaceTrackerAnchor"/>
+		</type>
+	</assembly>
+</linker>

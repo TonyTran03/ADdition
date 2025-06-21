@@ -5,10 +5,17 @@ using UnityEngine;
 public class InteractionManager : MonoBehaviour
 {
     public float Threshold = 0.25f;
+
+    public EventTrigger_C eventT;
     // Start is called before the first frame update
     void Start()
     {
-        
+
+    }
+
+    void Trigger()
+    {
+        eventT.Trigger();
     }
 
     RaycastHit ray;
@@ -42,10 +49,10 @@ public class InteractionManager : MonoBehaviour
 
                 float p = Vector3.Dot(tc, ndir);
                 Vector3 t = orig + p * ndir;
-                if ((select.position - t).magnitude < Threshold)
-                {
+               // if ((select.position - t).magnitude < Threshold)
+              //  {
                     select.gameObject.transform.position = t;
-                }
+              //  }
             }
         }
     }

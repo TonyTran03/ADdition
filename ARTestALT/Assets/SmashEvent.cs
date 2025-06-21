@@ -5,6 +5,7 @@ using UnityEngine;
 public class SmashEvent : MonoBehaviour
 {
     public EventTrigger_C eventT;
+    public bool InUse;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +22,9 @@ public class SmashEvent : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
+        if (InUse) return;
+
         Vector2 mousePos = Input.mousePosition;
 
         Ray _aux = Camera.main.ScreenPointToRay(Input.mousePosition);
