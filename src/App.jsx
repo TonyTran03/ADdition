@@ -14,17 +14,11 @@ import { useSnapshot } from "valtio";
 function App() {
   const [activePanel, setActivePanel] = useState("blocks"); // default panel
   const [selectedModelId, setSelectedModelId] = useState("ducktruck");
-  const [placedModels, setPlacedModels] = useState([]);
+
   const snap = useSnapshot(editorState);
   //  {creating a new model instance in real-time}
   const addModel = () => {
-    const id = Date.now();
-    const newModel = {
-      id,
-      type: selectedModelId,
-      position: [0, 0, 0], // center by default
-    };
-    setPlacedModels((prev) => [...prev, newModel]);
+    editorState.addModel(selectedModelId);
   };
 
   const models = [
@@ -65,15 +59,16 @@ function App() {
               </div>
             )}
             {activePanel === "assets" && (
-              <div className="bg-[#1E1E1E] h-full p-2 rounded">
-                Assets Panel
-              </div>
+              <div className="bg-[#1E1E1E] h-full p-2 rounded">Chat Bot</div>
             )}
           </div>
         </div>
 
         {/* second */}
         <div className="flex-[1_1_20%] bg-[#2A2A2A] border-r border-[#3D3D3D] p-4">
+          <div className="w-full text-center text-sm font-medium text-[#E5E7EB] mb-3">
+            Code Area
+          </div>
           <FlowEditor />
         </div>
 
@@ -107,7 +102,7 @@ function App() {
             >
               {/* Grid Floor */}
               <gridHelper
-                args={[32, 16, "#444", "#888"]}
+                args={[32, 16, "#444", "#888"]} // 32 units wide, 16 divisions
                 position={[0, 0, 0]}
                 rotation={[-Math.PI / 1.7, 0, 0]} // Tilted ~36° instead of full flat
               />
@@ -124,27 +119,24 @@ function App() {
               <Environment preset="sunset" />
               <CustomOrbitControls />
 
-              {placedModels.map(({ id, type, position }) => {
-                const model = models.find((m) => m.id === type);
-                const Component = model?.Component;
-                const selectedId = `model-${id}`;
-
-                return Component ? (
+              {Object.values(snap.models).map(({ id, type, position }) => {
+                const def = models.find((m) => m.id === type);
+                if (!def) return null;
+                return (
                   <group
                     key={id}
-                    name={selectedId}
+                    name={id}
                     position={position}
                     onClick={(e) => {
                       e.stopPropagation();
-                      editorState.current = selectedId;
+                      editorState.selectModel(id);
+                      console.log("👉 selected model:", editorState.models[id]);
                     }}
                   >
-                    <Component scale={0.5} />
-                    {snap.current === selectedId && (
-                      <Edges scale={55} color="hotpink" />
-                    )}
+                    <def.Component scale={0.5} />
+                    {snap.selectedId === id && <Edges scale={1} />}
                   </group>
-                ) : null;
+                );
               })}
             </Canvas>
           </div>

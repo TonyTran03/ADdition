@@ -72,6 +72,12 @@ function FlowEditorContent() {
         onDragOver={onDragOver}
         style={{ width: "100%", height: "100%" }}
         // fitView
+        panOnDrag={false}
+        zoomOnScroll={false}
+        zoomOnPinch={false}
+        panOnScroll={false}
+        elementsSelectable={false}
+        autoPanOnNodeDrag={false}
       >
         <Background />
       </ReactFlow>
