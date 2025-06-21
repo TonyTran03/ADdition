@@ -1,60 +1,67 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from "react";
 import ReactFlow, {
   addEdge,
   Background,
-  Controls,
-  MiniMap,
   useNodesState,
   useEdgesState,
   useReactFlow,
   ReactFlowProvider,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+} from "reactflow";
+import "reactflow/dist/style.css";
 
 const initialNodes = [];
 const initialEdges = [];
 
 function FlowEditorContent() {
+  const wrapperRef = useRef(null); // ✅ This ref anchors your coordinate system
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const { project } = useReactFlow(); // converts screen coords to flow coords
+  const { project } = useReactFlow();
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     []
   );
-const onDrop = useCallback(
-  (event) => {
-    event.preventDefault();
-    const type = event.dataTransfer.getData('application/reactflow');
-    if (!type) return;
 
-    const bounds = event.target.getBoundingClientRect();
-    const position = project({
-      x: event.clientX - bounds.left,
-      y: event.clientY - bounds.top,
-    });
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+      const type = event.dataTransfer.getData("application/reactflow");
+      if (!type || !wrapperRef.current) return;
 
-    const newNode = {
-      id: `${+new Date()}`,
-      type: 'default',
-      position,
-      data: { label: `${type} Node` },
-    };
+      const bounds = wrapperRef.current.getBoundingClientRect();
 
-    setNodes((nds) => nds.concat(newNode));
-  },
-  [project, setNodes]
-);
+      // 👉 Shift the drop point by half of expected node size (e.g. 150x40)
+      const centerOffset = {
+        x: 75, // half width
+        y: 20, // half height
+      };
 
+      const position = project({
+        x: event.clientX - bounds.left - centerOffset.x,
+        y: event.clientY - bounds.top - centerOffset.y,
+      });
+
+      const newNode = {
+        id: `${+new Date()}`,
+        type: "default",
+        position,
+        data: { label: `${type} Node` },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [project, setNodes]
+  );
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = "move";
   }, []);
 
   return (
-    <div className="w-full h-full">
+    <div ref={wrapperRef} className="w-full h-full relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -63,10 +70,8 @@ const onDrop = useCallback(
         onConnect={onConnect}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        fitView
+        // fitView
       >
-        <MiniMap />
-        <Controls />
         <Background />
       </ReactFlow>
     </div>

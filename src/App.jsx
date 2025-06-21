@@ -52,40 +52,30 @@ function App() {
         </Canvas>
         */}
 
-      <div className="w-full h-screen flex">
+      <div className="w-full h-screen flex bg-[#1E1E1E] text-[#E5E7EB] font-sans text-sm">
         {/* Left Panel */}
-        <div className="flex flex-col flex-[1_1_20%] bg-gray-100">
-          {/* Toggle Buttons */}
+        <div className="flex flex-col flex-[1_1_20%] bg-[#2A2A2A] border-r border-[#3D3D3D]">
           <SidePanelToggle
             activePanel={activePanel}
             onPanelChange={setActivePanel}
           />
-
-          {/* Panel Content */}
-          <div className="flex-1 p-4 overflow-auto text-amber-800">
+          <div className="flex-1 p-4 overflow-auto">
             {activePanel === "blocks" && (
-              <div className="h-[500px]">
+              <div className="space-y-2">
                 <div
-                  className="cursor-pointer p-2 mb-2 bg-white border rounded shadow"
+                  className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
                   draggable
-                  onDragStart={(event) =>
-                    event.dataTransfer.setData(
-                      "application/reactflow",
-                      "On Click"
-                    )
+                  onDragStart={(e) =>
+                    e.dataTransfer.setData("application/reactflow", "On Click")
                   }
                 >
                   On Click
                 </div>
-
                 <div
-                  className="cursor-pointer p-2 mb-2 bg-white border rounded shadow"
+                  className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
                   draggable
-                  onDragStart={(event) =>
-                    event.dataTransfer.setData(
-                      "application/reactflow",
-                      "Show Text"
-                    )
+                  onDragStart={(e) =>
+                    e.dataTransfer.setData("application/reactflow", "Show Text")
                   }
                 >
                   Show Text
@@ -93,25 +83,25 @@ function App() {
               </div>
             )}
             {activePanel === "assets" && (
-              <div className="bg-gray-200 h-full">Assets Panel</div>
+              <div className="bg-[#1E1E1E] h-full p-2 rounded">
+                Assets Panel
+              </div>
             )}
           </div>
         </div>
 
         {/* second */}
-        <div className="bg-green-200 flex-[1_1_20%] text-black">
-          Canvas
+        <div className="flex-[1_1_20%] bg-[#2A2A2A] border-r border-[#3D3D3D] p-4">
           <FlowEditor />
         </div>
 
         {/* third */}
-        <div className="h-screen w-screen flex flex-col">
-          {/* Top Panel: Add Model UI */}
-          <div className="bg-white p-4 border-b border-gray-300 flex items-center gap-4">
+        <div className="h-screen w-full flex flex-col bg-[#1E1E1E] border-r border-[#3D3D3D]">
+          <div className="p-4 border-b border-[#3D3D3D] bg-[#2A2A2A] flex items-center gap-4">
             <select
               value={selectedModelId}
               onChange={(e) => setSelectedModelId(e.target.value)}
-              className="select select-bordered"
+              className="bg-[#1E1E1E] text-[#E5E7EB] border border-[#3D3D3D] rounded-sm px-2 py-1"
             >
               {modelCatalog.map((model) => (
                 <option key={model.id} value={model.id}>
@@ -119,12 +109,14 @@ function App() {
                 </option>
               ))}
             </select>
-            <button onClick={addModel} className="btn btn-primary">
+            <button
+              onClick={addModel}
+              className="bg-[#6366F1] text-white px-3 py-1 rounded-sm hover:bg-indigo-500 transition"
+            >
               + Add Model
             </button>
           </div>
 
-          {/* Main Preview Canvas */}
           <div className="flex-1 relative">
             <Canvas
               className="w-full h-full"
@@ -137,12 +129,10 @@ function App() {
                 intensity={1}
                 castShadow
               />
-
               <Environment preset="sunset" />
               <OrbitControls />
               <TransformControls mode="translate">
                 <OrbitControls />
-
                 {placedModels.map(({ id, type, position }) => {
                   const Component = modelRegistry[type];
                   return <Component key={id} scale={0.5} />;
@@ -153,7 +143,9 @@ function App() {
         </div>
 
         {/* fourth */}
-        <div className="bg-yellow-200 flex-[1_1_20%]">Bottom Right</div>
+        <div className="flex-[1_1_20%] bg-[#2A2A2A] p-4 border-l border-[#3D3D3D]">
+          Bottom Right
+        </div>
       </div>
     </>
   );
