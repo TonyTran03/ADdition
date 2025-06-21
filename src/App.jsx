@@ -15,6 +15,7 @@ import { DuckTruck } from "./component/DuckTruck.jsx";
 import SidePanelToggle from "./component/SidePanelToggle.jsx";
 import FlowEditor from "./component/FlowEdit.jsx";
 import { Suzanne } from "./component/Suzanne.jsx";
+import DepthAxis from "./component/Axis.jsx";
 
 function App() {
   const [activePanel, setActivePanel] = useState("blocks"); // default panel
@@ -114,10 +115,11 @@ function App() {
             >
               {/* Grid Floor */}
               <gridHelper
-                args={[16, 16, "#444", "#888"]}
-                rotation={[-Math.PI / 2, 0, 0]}
+                args={[32, 16, "#444", "#888"]}
+                position={[0, 0, 0]}
+                rotation={[-Math.PI / 1.7, 0, 0]} // Tilted ~36° instead of full flat
               />
-
+              <DepthAxis length={16} color="white" />
               {/* Lighting */}
               <ambientLight intensity={0.5} />
               <directionalLight
@@ -128,8 +130,14 @@ function App() {
 
               {/* Environment & Controls */}
               <Environment preset="sunset" />
-              <OrbitControls ref={orbitRef} enabled={!isTransforming} />
-
+              <OrbitControls
+                ref={orbitRef}
+                enabled={!isTransforming}
+                minPolarAngle={Math.PI / 4}
+                maxPolarAngle={Math.PI / 1.4} // Limit vertical rotation
+                minAzimuthAngle={-Math.PI / 4} // -45 degrees left
+                maxAzimuthAngle={Math.PI / 4} // +45 degrees right
+              />
               {placedModels.map(({ id, type, position, ref }) => {
                 const model = models.find((m) => m.id === type);
                 const Component = model?.Component;
