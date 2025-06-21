@@ -13,7 +13,7 @@ const initialNodes = [];
 const initialEdges = [];
 
 function FlowEditorContent() {
-  const wrapperRef = useRef(null); // ✅ This ref anchors your coordinate system
+  const wrapperRef = useRef(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);

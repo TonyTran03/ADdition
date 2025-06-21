@@ -7,7 +7,7 @@ export const editorState = proxy({
   addModel(type) {
     const id = Date.now().toString();
     this.models[id] = {
-      id, // ← include it here
+      id,
       type,
       position: [0, 0, 0],
       metadata: {},

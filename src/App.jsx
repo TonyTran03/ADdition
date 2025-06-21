@@ -36,10 +36,29 @@ export default function App() {
         />
         <div className="flex-1 p-4 overflow-auto">
           {activePanel === "blocks" && (
-            <div className="space-y-2">{/* …block drag items… */}</div>
+            <div className="space-y-2">
+              <div
+                className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
+                draggable
+                onDragStart={(e) =>
+                  e.dataTransfer.setData("application/reactflow", "On Click")
+                }
+              >
+                On Click
+              </div>
+              <div
+                className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
+                draggable
+                onDragStart={(e) =>
+                  e.dataTransfer.setData("application/reactflow", "Show Text")
+                }
+              >
+                Show Text
+              </div>
+            </div>
           )}
           {activePanel === "assets" && (
-            <div className="bg-[#1E1E1E] h-full p-2 rounded">Chat Bot</div>
+            <div className="bg-[#1E1E1E] h-full p-2 rounded">Assets Panel</div>
           )}
         </div>
       </div>
@@ -93,7 +112,7 @@ export default function App() {
                 intensity={1}
                 castShadow
               />
-              <SnapPlane gridSize={1} />
+              {/* <SnapPlane gridSize={1} /> */}
               <Environment preset="sunset" />
               <CustomOrbitControls />
 
@@ -110,9 +129,9 @@ export default function App() {
                     onClick={(e) => {
                       e.stopPropagation();
                       editorState.selectModel(id);
-                      console.log("🎛️ all models:", snap.models);
-                      console.log(`👉 model[${id}]:`, snap.models[id]);
-                      console.log("🔑 selectedId:", snap.selectedId);
+                      // console.log(" all models:", snap.models);
+                      // console.log(`model[${id}]:`, snap.models[id]);
+                      // console.log("selectedId:", snap.selectedId);
                     }}
                   >
                     {/* give each child its own key */}
