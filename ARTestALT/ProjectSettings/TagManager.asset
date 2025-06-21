@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Interactables
   - Bee
+  - Board
   layers:
   - Default
   - TransparentFX

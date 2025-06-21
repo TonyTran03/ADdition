@@ -1,8 +1,11 @@
 <linker>
 	<assembly fullname="Assembly-CSharp">
 		<type fullname="BeeManipulationScript" preserve="nothing"/>
+		<type fullname="BlendConstraint" preserve="nothing"/>
+		<type fullname="BlenderManager" preserve="nothing"/>
 		<type fullname="EventTrigger_C" preserve="nothing"/>
 		<type fullname="InteractionManager" preserve="nothing"/>
+		<type fullname="Placeholder" preserve="nothing"/>
 		<type fullname="SmashEvent" preserve="nothing"/>
 	</assembly>
 	<assembly fullname="UnityEngine">
@@ -54,6 +57,7 @@
 		<type fullname="UnityEngine.Renderer" preserve="nothing"/>
 		<type fullname="UnityEngine.Rendering.GraphicsSettings" preserve="nothing"/>
 		<type fullname="UnityEngine.RenderSettings" preserve="nothing"/>
+		<type fullname="UnityEngine.Rigidbody" preserve="nothing"/>
 		<type fullname="UnityEngine.RuntimeAnimatorController" preserve="nothing"/>
 		<type fullname="UnityEngine.Shader" preserve="nothing"/>
 		<type fullname="UnityEngine.SkinnedMeshRenderer" preserve="nothing"/>
@@ -77,5 +81,6 @@
 		<type fullname="Zappar.ZapparCamera" preserve="nothing"/>
 		<type fullname="Zappar.ZapparCameraBackground" preserve="nothing"/>
 		<type fullname="Zappar.ZapparInstantTrackingTarget" preserve="nothing"/>
+		<type fullname="Zappar.ZapparUARSettings" preserve="nothing"/>
 	</assembly>
 </linker>

@@ -64,6 +64,8 @@
     <Compile Include="Assets/BeeManipulationScript.cs" />
     <Compile Include="Assets/InteractionManager.cs" />
     <Compile Include="Assets/EventTrigger_C.cs" />
+    <Compile Include="Assets/BlenderManager.cs" />
+    <Compile Include="Assets/Placeholder.cs" />
     <Compile Include="Assets/SmashEvent.cs" />
   </ItemGroup>
   <ItemGroup>

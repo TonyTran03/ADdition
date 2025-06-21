@@ -29,6 +29,11 @@ extern void U3CDelayedControlU3Ed__39_System_IDisposable_Dispose_m23674512E7A883
 extern void U3CDelayedControlU3Ed__39_MoveNext_m4A941ECCEFCBE9DB45EB72E080DB37AD4D3E4BD7 (void);
 extern void U3CDelayedControlU3Ed__39_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m5976BAE06CD7EB2A48CB0C07F6EF853BA4D7C7D3 (void);
 extern void U3CDelayedControlU3Ed__39_System_Collections_IEnumerator_get_Current_mC232C17A86885DDA1D086BF0284D4EBF0CE15AB2 (void);
+extern void BlendConstraint_OnTriggerStay_m7313B562FFD61E457F04A4FE5960FC76F12EA670 (void);
+extern void BlendConstraint_Update_mDD6AB73CCFB9A75423D80F1687AA5CF44BC1A1A4 (void);
+extern void BlendConstraint__ctor_m9768C00439C682AFE7A33A234F1404B607CCFF48 (void);
+extern void BlenderManager_Update_m64D1411E9D9D75E4C14A788F04461C098B878006 (void);
+extern void BlenderManager__ctor_mF03E70FF8F6B06F6EC29AC92192D4F25E3E6C4C7 (void);
 extern void EventTrigger_C_OnEnable_mFFF3E7C70DCA08BDD01C24A16B274388298AD7D4 (void);
 extern void EventTrigger_C_Trigger_mA4A3D93E7BE51A596B9914A651DFE985BA33A881 (void);
 extern void EventTrigger_C_TriggerTGB_m6212907876DEDA8E642A3CBA574203FAB7863B75 (void);
@@ -39,10 +44,11 @@ extern void UIGB__ctor_m3BBF446AEA71C0140E93CA8F99FA30431A57A333 (void);
 extern void InteractionManager_Trigger_mB63DAAA9AA596D0CA9716531A3D7B402F6DE4D0D (void);
 extern void InteractionManager_FixedUpdate_m5ADEF6D56BA2F1F764D0AAEF5A10CE0367BAD92C (void);
 extern void InteractionManager__ctor_m82FEC99B565D720A3A64B245741DF3856A0CA19C (void);
+extern void Placeholder__ctor_mACCB4F1B75C5495ED6E6BB40AD08965C0DEB7CDE (void);
 extern void SmashEvent_Trigger_m3BC7D5AB12DDB4D9505F32A3EFCDC407AEFEE615 (void);
 extern void SmashEvent_FixedUpdate_mE7768F1A29C3E302A7BFB5F4AC46CE5C5984ED81 (void);
 extern void SmashEvent__ctor_m9101ABB8D080E34242D919D17442BCA7037B285C (void);
-static Il2CppMethodPointer s_methodPointers[30] = 
+static Il2CppMethodPointer s_methodPointers[36] = 
 {
 	BeeManipulationScript_ManipulateBee_mD1DA6B924A3BD61C900295A517140B73C6FA1274,
 	BeeManipulationScript_ZoomBee_m128A7C991DFD7E08078274B7F38BB3090BFD1F81,
@@ -61,6 +67,11 @@ static Il2CppMethodPointer s_methodPointers[30] =
 	U3CDelayedControlU3Ed__39_MoveNext_m4A941ECCEFCBE9DB45EB72E080DB37AD4D3E4BD7,
 	U3CDelayedControlU3Ed__39_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m5976BAE06CD7EB2A48CB0C07F6EF853BA4D7C7D3,
 	U3CDelayedControlU3Ed__39_System_Collections_IEnumerator_get_Current_mC232C17A86885DDA1D086BF0284D4EBF0CE15AB2,
+	BlendConstraint_OnTriggerStay_m7313B562FFD61E457F04A4FE5960FC76F12EA670,
+	BlendConstraint_Update_mDD6AB73CCFB9A75423D80F1687AA5CF44BC1A1A4,
+	BlendConstraint__ctor_m9768C00439C682AFE7A33A234F1404B607CCFF48,
+	BlenderManager_Update_m64D1411E9D9D75E4C14A788F04461C098B878006,
+	BlenderManager__ctor_mF03E70FF8F6B06F6EC29AC92192D4F25E3E6C4C7,
 	EventTrigger_C_OnEnable_mFFF3E7C70DCA08BDD01C24A16B274388298AD7D4,
 	EventTrigger_C_Trigger_mA4A3D93E7BE51A596B9914A651DFE985BA33A881,
 	EventTrigger_C_TriggerTGB_m6212907876DEDA8E642A3CBA574203FAB7863B75,
@@ -71,11 +82,12 @@ static Il2CppMethodPointer s_methodPointers[30] =
 	InteractionManager_Trigger_mB63DAAA9AA596D0CA9716531A3D7B402F6DE4D0D,
 	InteractionManager_FixedUpdate_m5ADEF6D56BA2F1F764D0AAEF5A10CE0367BAD92C,
 	InteractionManager__ctor_m82FEC99B565D720A3A64B245741DF3856A0CA19C,
+	Placeholder__ctor_mACCB4F1B75C5495ED6E6BB40AD08965C0DEB7CDE,
 	SmashEvent_Trigger_m3BC7D5AB12DDB4D9505F32A3EFCDC407AEFEE615,
 	SmashEvent_FixedUpdate_mE7768F1A29C3E302A7BFB5F4AC46CE5C5984ED81,
 	SmashEvent__ctor_m9101ABB8D080E34242D919D17442BCA7037B285C,
 };
-static const int32_t s_InvokerIndices[30] = 
+static const int32_t s_InvokerIndices[36] = 
 {
 	3323,
 	3283,
@@ -94,6 +106,12 @@ static const int32_t s_InvokerIndices[30] =
 	3896,
 	3967,
 	3967,
+	3254,
+	4051,
+	4051,
+	4051,
+	4051,
+	4051,
 	4051,
 	4051,
 	4051,
@@ -112,7 +130,7 @@ IL2CPP_EXTERN_C const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule;
 const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule = 
 {
 	"Assembly-CSharp.dll",
-	30,
+	36,
 	s_methodPointers,
 	0,
 	NULL,

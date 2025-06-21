@@ -2,8 +2,11 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - BeeManipulationScript
+    - BlendConstraint
+    - BlenderManager
     - EventTrigger_C
     - InteractionManager
+    - Placeholder
     - SmashEvent
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
@@ -33,6 +36,7 @@ ScriptsOnlyBuild:
     - Zappar.ZapparCamera
     - Zappar.ZapparCameraBackground
     - Zappar.ZapparInstantTrackingTarget
+    - Zappar.ZapparUARSettings
   serializedClasses:
     Assembly-CSharp:
     - EventTrigger_C/TriggerGB
@@ -53,9 +57,18 @@ ScriptsOnlyBuild:
   - assembly: UnityEngine.AnimationModule
     fullTypeName: UnityEngine.Animator
     methodName: Play
+  - assembly: UnityEngine.CoreModule
+    fullTypeName: UnityEngine.GameObject
+    methodName: SetActive
   - assembly: Zappar.UAR
     fullTypeName: Zappar.ZapparInstantTrackingTarget
     methodName: PlaceTrackerAnchor
+  - assembly: UnityEngine.CoreModule
+    fullTypeName: UnityEngine.GameObject
+    methodName: SetActive
+  - assembly: UnityEngine.CoreModule
+    fullTypeName: UnityEngine.GameObject
+    methodName: SetActive
   - assembly: UnityEngine.CoreModule
     fullTypeName: UnityEngine.GameObject
     methodName: SetActive
@@ -68,6 +81,18 @@ ScriptsOnlyBuild:
   - assembly: Zappar.UAR
     fullTypeName: Zappar.ZapparInstantTrackingTarget
     methodName: PlaceTrackerAnchor
+  - assembly: UnityEngine.CoreModule
+    fullTypeName: UnityEngine.GameObject
+    methodName: SetActive
+  - assembly: UnityEngine.CoreModule
+    fullTypeName: UnityEngine.GameObject
+    methodName: SetActive
+  - assembly: UnityEngine.CoreModule
+    fullTypeName: UnityEngine.GameObject
+    methodName: SetActive
+  - assembly: UnityEngine.CoreModule
+    fullTypeName: UnityEngine.GameObject
+    methodName: SetActive
   sceneClasses:
     Assets/Scenes/scene2.unity:
     - Class: 1
@@ -87,6 +112,8 @@ ScriptsOnlyBuild:
     - Class: 43
       Script: {instanceID: 0}
     - Class: 48
+      Script: {instanceID: 0}
+    - Class: 54
       Script: {instanceID: 0}
     - Class: 64
       Script: {instanceID: 0}
@@ -140,6 +167,12 @@ ScriptsOnlyBuild:
       Script: {instanceID: 23814}
     - Class: 114
       Script: {instanceID: 23938}
+    - Class: 114
+      Script: {instanceID: 83982}
+    - Class: 114
+      Script: {instanceID: 88854}
+    - Class: 114
+      Script: {instanceID: 124780}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -755,7 +788,25 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.TestRunner
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
     className: TestResultRendererCallback
+  - hash:
+      serializedVersion: 2
+      Hash: 1a139458976f2b811f9a8765fdeac206
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: BlendConstraint
+  - hash:
+      serializedVersion: 2
+      Hash: 542678fbeb8738012c41d92890991368
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: BlenderManager
+  - hash:
+      serializedVersion: 2
+      Hash: 365388b06e04400cfc21103b35731d5e
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: Placeholder
   platform: 20
   scenePathNames:
   - Assets/Scenes/scene2.unity
-  playerPath: /Users/ktzhang/buildtestar/wtfamidoing/nekotan
+  playerPath: /Users/ktzhang/buildtestar/wtfamidoing/nekotan2
