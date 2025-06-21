@@ -13,7 +13,7 @@ const initialNodes = [];
 const initialEdges = [];
 
 function FlowEditorContent() {
-  const wrapperRef = useRef(null); // ✅ This ref anchors your coordinate system
+  const wrapperRef = useRef(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -32,7 +32,6 @@ function FlowEditorContent() {
 
       const bounds = wrapperRef.current.getBoundingClientRect();
 
-      // 👉 Shift the drop point by half of expected node size (e.g. 150x40)
       const centerOffset = {
         x: 75, // half width
         y: 20, // half height
@@ -70,7 +69,14 @@ function FlowEditorContent() {
         onConnect={onConnect}
         onDrop={onDrop}
         onDragOver={onDragOver}
+        style={{ width: "100%", height: "100%" }}
         // fitView
+        panOnDrag={false}
+        zoomOnScroll={false}
+        zoomOnPinch={false}
+        panOnScroll={false}
+        elementsSelectable={false}
+        autoPanOnNodeDrag={false}
       >
         <Background />
       </ReactFlow>
