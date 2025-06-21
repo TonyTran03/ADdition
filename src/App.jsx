@@ -14,12 +14,14 @@ import {
 import { DuckTruck } from "./component/DuckTruck.jsx";
 import SidePanelToggle from "./component/SidePanelToggle.jsx";
 import FlowEditor from "./component/FlowEdit.jsx";
+import { Suzanne } from "./component/Suzanne.jsx";
 
 function App() {
   const [activePanel, setActivePanel] = useState("blocks"); // default panel
   const [selectedModelId, setSelectedModelId] = useState("ducktruck");
   const [placedModels, setPlacedModels] = useState([]);
-
+  const orbitRef = useRef();
+  const [isTransforming, setIsTransforming] = useState(false);
   const addModel = () => {
     setPlacedModels((prev) => [
       ...prev,
@@ -31,27 +33,13 @@ function App() {
     ]);
   };
 
-  const modelCatalog = [{ id: "ducktruck", label: "Duck Truck" }];
-
-  const modelRegistry = {
-    ducktruck: DuckTruck,
-  };
+  const models = [
+    { id: "ducktruck", label: "Duck Truck", Component: DuckTruck },
+    { id: "suzanne", label: "Monkey Head", Component: Suzanne },
+  ];
 
   return (
     <>
-      {/* 
-        <Canvas className="w-full h-full" camera={{ position: [0, 0, 5], fov: 75 }} shadows >
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} castShadow />
-
-          <Environment preset="sunset" />
-          <OrbitControls />
-          <TransformControls mode="translate">
-            <DuckTruck ref={ducktruckRef} scale={0.5} />
-          </TransformControls>
-        </Canvas>
-        */}
-
       <div className="w-full h-screen flex bg-[#1E1E1E] text-[#E5E7EB] font-sans text-sm">
         {/* Left Panel */}
         <div className="flex flex-col flex-[1_1_20%] bg-[#2A2A2A] border-r border-[#3D3D3D]">
@@ -103,7 +91,7 @@ function App() {
               onChange={(e) => setSelectedModelId(e.target.value)}
               className="bg-[#1E1E1E] text-[#E5E7EB] border border-[#3D3D3D] rounded-sm px-2 py-1"
             >
-              {modelCatalog.map((model) => (
+              {models.map((model) => (
                 <option key={model.id} value={model.id}>
                   {model.label}
                 </option>
@@ -120,22 +108,37 @@ function App() {
           <div className="flex-1 relative">
             <Canvas
               className="w-full h-full"
-              camera={{ position: [0, 0, 5], fov: 75 }}
+              camera={{ position: [0, 0, 16], fov: 60 }}
               shadows
             >
+              {/* Grid Floor */}
+              <gridHelper
+                args={[16, 16, "#444", "#888"]}
+                rotation={[-Math.PI / 2, 0, 0]}
+              />
+
+              {/* Lighting */}
               <ambientLight intensity={0.5} />
               <directionalLight
                 position={[10, 10, 5]}
                 intensity={1}
                 castShadow
               />
+
+              {/* Environment & Controls */}
               <Environment preset="sunset" />
-              <OrbitControls />
-              <TransformControls mode="translate">
-                <OrbitControls />
+              <OrbitControls ref={orbitRef} enabled={!isTransforming} />
+              <TransformControls
+                mode="translate"
+                onMouseDown={() => setIsTransforming(true)}
+                onMouseUp={() => setIsTransforming(false)}
+              >
                 {placedModels.map(({ id, type, position }) => {
-                  const Component = modelRegistry[type];
-                  return <Component key={id} scale={0.5} />;
+                  const model = models.find((m) => m.id === type);
+                  const Component = model?.Component;
+                  return Component ? (
+                    <Component key={id} position={position} scale={0.5} />
+                  ) : null;
                 })}
               </TransformControls>
             </Canvas>
