@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+.react-flow__node-default {
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #1f2937; /* dark gray */
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
