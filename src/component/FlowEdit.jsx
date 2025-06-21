@@ -32,7 +32,6 @@ function FlowEditorContent() {
 
       const bounds = wrapperRef.current.getBoundingClientRect();
 
-      // 👉 Shift the drop point by half of expected node size (e.g. 150x40)
       const centerOffset = {
         x: 75, // half width
         y: 20, // half height

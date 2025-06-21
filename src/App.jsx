@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
-import { Environment, Edges } from "@react-three/drei";
+import { Environment, Edges, TransformControls } from "@react-three/drei";
 import { DuckTruck } from "./component/DuckTruck.jsx";
 import SidePanelToggle from "./component/SidePanelToggle.jsx";
 import FlowEditor from "./component/FlowEdit.jsx";
@@ -11,12 +11,34 @@ import SnapPlane from "./component/grid/SnapPlane.jsx";
 import CustomOrbitControls from "./component/grid/CustomOrbitControls.jsx";
 import { editorState } from "./state/valtioStore";
 import { useSnapshot } from "valtio";
+import { Vector3, Plane } from "three";
+import DraggableModel from "./component/DraggableModel.jsx";
 
 export default function App() {
   const [activePanel, setActivePanel] = useState("blocks");
   const [selectedModelId, setSelectedModelId] = useState("ducktruck");
   const snap = useSnapshot(editorState);
 
+  const selectedId = snap.selectedId;
+  const selectedModel = selectedId ? snap.models[selectedId] : null;
+
+  // Handlers to update transform
+  const updatePosition = (axis, value) => {
+    if (!selectedId) return;
+    const pos = [...selectedModel.position];
+    pos[axis] = parseFloat(value);
+    editorState.updatePosition(pos);
+  };
+
+  const updateRotation = (axis, value) => {
+    if (!selectedId) return;
+    editorState.updateRotation(axis, parseFloat(value));
+  };
+
+  const updateScale = (value) => {
+    if (!selectedId) return;
+    editorState.updateScale(parseFloat(value));
+  };
   const addModel = () => {
     editorState.addModel(selectedModelId);
   };
@@ -41,7 +63,10 @@ export default function App() {
                 className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
                 draggable
                 onDragStart={(e) =>
-                  e.dataTransfer.setData("application/reactflow", "On Click")
+                  e.dataTransfer.setData(
+                    "application/reactflow",
+                    "I lay in my bed"
+                  )
                 }
               >
                 On Click
@@ -50,7 +75,10 @@ export default function App() {
                 className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
                 draggable
                 onDragStart={(e) =>
-                  e.dataTransfer.setData("application/reactflow", "Show Text")
+                  e.dataTransfer.setData(
+                    "application/reactflow",
+                    "cry myself to sleep"
+                  )
                 }
               >
                 Show Text
@@ -116,40 +144,91 @@ export default function App() {
               <Environment preset="sunset" />
               <CustomOrbitControls />
 
-              {Object.values(snap.models).map((modelObj) => {
-                const { id, type, position } = modelObj;
-                const def = models.find((m) => m.id === type);
-                if (!def) return null;
-
-                return (
-                  <group
-                    key={id}
-                    name={id}
-                    position={position}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      editorState.selectModel(id);
-                      // console.log(" all models:", snap.models);
-                      // console.log(`model[${id}]:`, snap.models[id]);
-                      // console.log("selectedId:", snap.selectedId);
-                    }}
-                  >
-                    {/* give each child its own key */}
-                    <def.Component key={`${id}-mesh`} scale={0.5} />
-                    {snap.selectedId === id && (
-                      <Edges key={`${id}-edges`} scale={1} />
-                    )}
-                  </group>
-                );
-              })}
+              {Object.values(snap.models).map(({ id, type, position }) => (
+                <DraggableModel
+                  key={id}
+                  id={id}
+                  type={type}
+                  position={position}
+                />
+              ))}
             </group>
           </Canvas>
         </div>
       </div>
 
-      {/* Right Panel */}
+      {/* Properties Panel */}
       <div className="flex-[1_1_20%] bg-[#2A2A2A] p-4 border-l border-[#3D3D3D]">
-        Bottom Right
+        <h3 className="text-sm font-medium mb-2">Properties</h3>
+        {!selectedModel && <p className="text-xs">Select a model to edit.</p>}
+        {selectedModel && (
+          <div className="space-y-2 text-xs">
+            <div>
+              <label className="block">Position X:</label>
+              <input
+                type="number"
+                value={selectedModel.position[0]}
+                onChange={(e) => updatePosition(0, e.target.value)}
+                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
+              />
+            </div>
+            <div>
+              <label className="block">Position Y:</label>
+              <input
+                type="number"
+                value={selectedModel.position[1]}
+                onChange={(e) => updatePosition(1, e.target.value)}
+                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
+              />
+            </div>
+            <div>
+              <label className="block">Position Z:</label>
+              <input
+                type="number"
+                value={selectedModel.position[2]}
+                onChange={(e) => updatePosition(2, e.target.value)}
+                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
+              />
+            </div>
+            <div>
+              <label className="block">Rotation X:</label>
+              <input
+                type="number"
+                value={selectedModel.rotation ? selectedModel.rotation[0] : 0}
+                onChange={(e) => updateRotation(0, e.target.value)}
+                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
+              />
+            </div>
+            <div>
+              <label className="block">Rotation Y:</label>
+              <input
+                type="number"
+                value={selectedModel.rotation ? selectedModel.rotation[1] : 0}
+                onChange={(e) => updateRotation(1, e.target.value)}
+                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
+              />
+            </div>
+            <div>
+              <label className="block">Rotation Z:</label>
+              <input
+                type="number"
+                value={selectedModel.rotation ? selectedModel.rotation[2] : 0}
+                onChange={(e) => updateRotation(2, e.target.value)}
+                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
+              />
+            </div>
+            <div>
+              <label className="block">Scale:</label>
+              <input
+                type="number"
+                step="0.1"
+                value={selectedModel.scale ?? 1}
+                onChange={(e) => updateScale(e.target.value)}
+                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
