@@ -15,6 +15,7 @@ export default function FirstPersonController({ active }) {
       camera.rotation.set(0, 0, 0);
     }
   }, [active]);
+
   useEffect(() => {
     const onKeyDown = (e) => (keys.current[e.key.toLowerCase()] = true);
     const onKeyUp = (e) => (keys.current[e.key.toLowerCase()] = false);
@@ -43,6 +44,33 @@ export default function FirstPersonController({ active }) {
 
     camera.position.add(velocity.current);
   });
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key.toLowerCase() === "e" && active) {
+        const { camera } = useThree().get();
+        const snap = editorState;
+
+        // Loop through all models
+        for (const model of Object.values(snap.models)) {
+          const [x, y, z] = model.position;
+          const camPos = camera.position;
+          const dist = Math.sqrt(
+            (x - camPos.x) ** 2 + (y - camPos.y) ** 2 + (z - camPos.z) ** 2
+          );
+
+          if (dist < 2) {
+            console.log(`🧠 Interacting with ${model.name}`);
+            console.log(model.metadata.blocks);
+
+            // Later: run the blocks through an interpreter here
+          }
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [active]);
 
   return null;
 }

@@ -1,15 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Vector3, Plane } from "three";
 import { useSnapshot } from "valtio";
-import { Edges } from "@react-three/drei";
+import { Html, useGLTF } from "@react-three/drei";
 import { editorState } from "../state/valtioStore";
-import { DuckTruck } from "../component/DuckTruck.jsx";
-import { Suzanne } from "../component/Suzanne.jsx";
 import { Select } from "@react-three/postprocessing";
-const modelMap = {
-  ducktruck: DuckTruck,
-  suzanne: Suzanne,
-};
+import modelList from "../assets/models.json";
 
 export default function DraggableModel({
   id,
@@ -19,28 +14,29 @@ export default function DraggableModel({
   gridSize = 1,
 }) {
   const snap = useSnapshot(editorState);
-  const Component = modelMap[type];
-
   const groupRef = useRef();
   const dragPlane = useRef(new Plane(new Vector3(0, 1, 0), 0));
   const dragOffset = useRef(new Vector3());
   const [dragging, setDragging] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
   const model = snap.models[id];
   const rotation = model?.rotation || [0, 0, 0];
   const scale = model?.scale || 1;
+
+  const meta = modelList.find((m) => m.id === type);
+  const { scene } = useGLTF(meta?.glb || "");
+
   const handleClick = (e) => {
     e.stopPropagation();
-    // PICK UP
     if (!dragging) {
       setDragging(true);
-      // disable orbit
       if (orbitRef?.current) orbitRef.current.enabled = false;
-      // align plane to object's height
+
       dragPlane.current.setFromNormalAndCoplanarPoint(
         new Vector3(0, 1, 0),
         groupRef.current.getWorldPosition(new Vector3())
       );
-      // compute offset
       const intersect = e.ray.intersectPlane(dragPlane.current, new Vector3());
       if (intersect) {
         dragOffset.current
@@ -49,22 +45,18 @@ export default function DraggableModel({
       }
       editorState.selectModel(id);
     } else {
-      // DROP
       const intersect = e.ray.intersectPlane(dragPlane.current, new Vector3());
       if (intersect) {
-        // compute new world position minus offset
         const worldPos = intersect.sub(dragOffset.current);
-        // convert to local
         const localPos = groupRef.current.parent.worldToLocal(worldPos.clone());
-        // Snap X and Z to grid
+
         const snappedX = Math.round(localPos.x / gridSize) * gridSize;
         const snappedZ = Math.round(localPos.z / gridSize) * gridSize;
 
-        // Stack logic: find how many models occupy this X/Z pair
         let stackHeight = 0;
         Object.values(snap.models).forEach((model) => {
           if (
-            model.id !== id && // don't compare with self
+            model.id !== id &&
             Math.round(model.position[0] / gridSize) * gridSize === snappedX &&
             Math.round(model.position[2] / gridSize) * gridSize === snappedZ
           ) {
@@ -72,18 +64,14 @@ export default function DraggableModel({
           }
         });
 
-        // Final snapped position with stackHeight on Y
         const cappedX = Math.max(Math.min(snappedX, 16), -16);
         const cappedZ = Math.max(Math.min(snappedZ, 16), -16);
         const snapped = [cappedX, stackHeight, cappedZ];
 
         groupRef.current.position.set(...snapped);
         editorState.updatePosition(snapped);
-        groupRef.current.position.set(...snapped);
-        editorState.updatePosition(snapped);
       }
       setDragging(false);
-      // re-enable orbit
       if (orbitRef?.current) orbitRef.current.enabled = true;
     }
   };
@@ -108,8 +96,16 @@ export default function DraggableModel({
       onPointerMove={onPointerMove}
     >
       <Select enabled={snap.selectedId === id}>
-        {Component && <Component scale={scale} />}
+        <primitive object={scene} scale={scale} />
       </Select>
+
+      {hovered && (
+        <Html center distanceFactor={10}>
+          <div className="bg-black/80 text-white text-xs px-2 py-1 rounded shadow">
+            {model?.name || meta?.label || "Model"}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }

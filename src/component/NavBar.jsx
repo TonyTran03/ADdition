@@ -13,12 +13,14 @@ export default function NavBar({ onEnterPointerLock }) {
 
       {/* Buttons */}
       <div className="flex items-center gap-2">
-        <button
-          onClick={onEnterPointerLock}
-          className="text-xs px-3 py-1 rounded-sm bg-yellow-500 text-white hover:bg-yellow-600 transition"
-        >
-          Enter Immersive
-        </button>
+        <div className="tooltip tooltip-bottom" data-tip="Press E to interact">
+          <button
+            onClick={onEnterPointerLock}
+            className="text-xs px-3 py-1 rounded-sm bg-yellow-500 text-white hover:bg-yellow-600 transition"
+          >
+            Enter Immersive
+          </button>
+        </div>
 
         <button className="text-xs px-3 py-1 rounded-sm bg-[#6366F1] text-white hover:bg-indigo-500 transition">
           Publish

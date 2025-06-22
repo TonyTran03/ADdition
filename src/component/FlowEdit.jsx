@@ -91,7 +91,7 @@ function FlowEditorContent() {
         <Background />
       </ReactFlow>
 
-      {/* 👇 Overlay message if no blocks */}
+      {/*  message if no blocks */}
       {nodes.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center text-xs text-[#9CA3AF] pointer-events-none">
           Place a block here to start dragging

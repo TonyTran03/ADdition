@@ -152,7 +152,7 @@ export default function App() {
           <FlowEditor />
         </div>
 
-        {/* 3D Canvas  3*/}
+        {/* 3D Canvas panel 3*/}
         <div className="h-screen flex flex-col flex-[1_1_60%] lg:flex-[1_1_auto] bg-[#1E1E1E] border-r border-[#3D3D3D]">
           <div className="p-4 border-b border-[#3D3D3D] bg-[#2A2A2A] overflow-y-auto max-h-48">
             <div className="flex flex-wrap gap-2">
