@@ -47,13 +47,14 @@ function FlowEditorContent() {
         x: event.clientX - bounds.left - centerOffset.x,
         y: event.clientY - bounds.top - centerOffset.y,
       });
-
-      const id = `${+new Date()}`;
+      const raw = event.dataTransfer.getData("application/reactflow");
+      const block = JSON.parse(raw);
+      const id = `${block.id}-${Date.now()}`;
       const newNode = {
         id,
         type: "default",
         position,
-        data: { label: `${type} Node` },
+        data: { label: block.label },
       };
 
       setNodes((nds) => nds.concat(newNode));

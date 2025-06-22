@@ -1,0 +1,16 @@
+{
+  "eventBlocks": [
+    { "id": "onClick", "label": "On Click", "category": "Event" },
+    { "id": "onHover", "label": "On Hover", "category": "Event" },
+    { "id": "onProximity", "label": "In Proximity", "category": "Event" },
+    { "id": "afterDelay", "label": "After delay", "category": "Event" },
+    { "id": "onSwipe", "label": "On swipe", "category": "Event" }
+  ],
+  "actionBlocks": [
+    { "id": "animation", "label": "Animation", "category": "Action" },
+    { "id": "showText", "label": "Show Text", "category": "Action" },
+    { "id": "showDiscount", "label": "Show Discount", "category": "Action" },
+    { "id": "hideObject", "label": "Hide Object", "category": "Action" },
+    { "id": "soundEffects", "label": "Sound Effects", "category": "Action" }
+  ]
+}

@@ -6,10 +6,8 @@ import {
   TransformControls,
   PointerLockControls,
 } from "@react-three/drei";
-import { DuckTruck } from "./component/DuckTruck.jsx";
 import SidePanelToggle from "./component/SidePanelToggle.jsx";
 import FlowEditor from "./component/FlowEdit.jsx";
-import { Suzanne } from "./component/Suzanne.jsx";
 import DepthAxis from "./component/Axis.jsx";
 import CustomOrbitControls from "./component/grid/CustomOrbitControls.jsx";
 import { editorState } from "./state/valtioStore";
@@ -20,6 +18,7 @@ import modelList from "./assets/models.json";
 import { Pencil } from "lucide-react";
 import NavBar from "./component/NavBar"; // Adjust path if needed
 import FirstPersonController from "./component/FirstPersonController.jsx";
+import BlockPalette from "./component/blockpalette.jsx";
 
 export default function App() {
   const [immersiveMode, setImmersiveMode] = useState(false);
@@ -79,7 +78,6 @@ export default function App() {
       if (!document.pointerLockElement) {
         setImmersiveMode(false);
 
-        // 🔁 Reset camera when exiting immersive
         const canvas = canvasRef.current;
         if (canvas?.__r3f?.root) {
           const camera = canvas.__r3f.root.getState().camera;
@@ -116,28 +114,7 @@ export default function App() {
             onPanelChange={setActivePanel}
           />
           <div className="flex-1 p-4 overflow-auto">
-            {activePanel === "blocks" && (
-              <div className="space-y-2">
-                <div
-                  className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
-                  draggable
-                  onDragStart={(e) =>
-                    e.dataTransfer.setData("application/reactflow", "On Click")
-                  }
-                >
-                  On Click
-                </div>
-                <div
-                  className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
-                  draggable
-                  onDragStart={(e) =>
-                    e.dataTransfer.setData("application/reactflow", "Show Text")
-                  }
-                >
-                  Show Text
-                </div>
-              </div>
-            )}
+            {activePanel === "blocks" && <BlockPalette />}
             {activePanel === "assets" && (
               <div className="bg-[#1E1E1E] h-full p-2 rounded">Gemini</div>
             )}
