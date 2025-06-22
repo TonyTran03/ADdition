@@ -12,11 +12,7 @@ import { editorState } from "./state/valtioStore";
 import { useSnapshot } from "valtio";
 import { Vector3, Plane } from "three";
 import DraggableModel from "./component/DraggableModel.jsx";
-import {
-  Selection,
-  EffectComposer,
-  Outline,
-} from "@react-three/postprocessing";
+import modelList from "./assets/models.json";
 
 export default function App() {
   const [activePanel, setActivePanel] = useState("blocks");
@@ -49,14 +45,6 @@ export default function App() {
     if (!selectedId) return;
     editorState.updateScale(parseFloat(value));
   };
-  const addModel = () => {
-    editorState.addModel(selectedModelId);
-  };
-
-  const models = [
-    { id: "ducktruck", label: "Duck Truck", Component: DuckTruck },
-    { id: "suzanne", label: "Monkey Head", Component: Suzanne },
-  ];
 
   return (
     <div className="w-full h-screen flex bg-[#1E1E1E] text-[#E5E7EB] font-sans text-sm">
@@ -96,7 +84,7 @@ export default function App() {
             </div>
           )}
           {activePanel === "assets" && (
-            <div className="bg-[#1E1E1E] h-full p-2 rounded">Assets Panel</div>
+            <div className="bg-[#1E1E1E] h-full p-2 rounded">Gemini</div>
           )}
         </div>
       </div>
@@ -111,24 +99,36 @@ export default function App() {
 
       {/* 3D Canvas */}
       <div className="h-screen w-full flex flex-col bg-[#1E1E1E] border-r border-[#3D3D3D]">
-        <div className="p-4 border-b border-[#3D3D3D] bg-[#2A2A2A] flex items-center gap-4">
-          <select
-            value={selectedModelId}
-            onChange={(e) => setSelectedModelId(e.target.value)}
-            className="bg-[#1E1E1E] text-[#E5E7EB] border border-[#3D3D3D] rounded-sm px-2 py-1"
+        <div className="p-4 border-b border-[#3D3D3D] bg-[#2A2A2A] flex items-center gap-2 overflow-x-auto">
+          {Object.values(snap.models).map(({ id, type }) => {
+            const assetInfo = modelList.find((m) => m.id === type);
+            return (
+              <div
+                key={id}
+                onClick={() => editorState.selectModel(id)}
+                className={`cursor-pointer flex flex-col items-center border rounded p-1 transition ${
+                  snap.selectedId === id
+                    ? "border-[#6366F1] bg-[#1E1E1E]"
+                    : "border-[#3D3D3D]"
+                }`}
+              >
+                <img
+                  src={assetInfo?.thumbnail}
+                  alt={type}
+                  className="w-10 h-10 object-cover rounded"
+                />
+                <span className="text-xs text-white">{assetInfo?.label}</span>
+              </div>
+            );
+          })}
+
+          {/* Add Button - Always at the End */}
+          <label
+            htmlFor="asset-picker-modal"
+            className="flex flex-col items-center justify-center w-10 h-10 border border-dashed border-[#6366F1] text-[#6366F1] hover:bg-[#1E1E1E] rounded cursor-pointer"
           >
-            {models.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.label}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={addModel}
-            className="bg-[#6366F1] text-white px-3 py-1 rounded-sm hover:bg-indigo-500 transition"
-          >
-            + Add Model
-          </button>
+            +
+          </label>
         </div>
 
         <div className="flex-1 relative">
@@ -158,26 +158,14 @@ export default function App() {
               <Environment preset="sunset" />
               <CustomOrbitControls />
 
-              <Selection>
-                {Object.values(snap.models).map(({ id, type, position }) => (
-                  <DraggableModel
-                    key={id}
-                    id={id}
-                    type={type}
-                    position={position}
-                  />
-                ))}
-
-                <EffectComposer multisampling={8} autoClear={false}>
-                  <Outline
-                    visibleEdgeColor="white"
-                    hiddenEdgeColor="gray"
-                    edgeStrength={10} // Try 10–20
-                    width={0.01} // Try 0.01–0.05 for better visibility
-                    blur
-                  />
-                </EffectComposer>
-              </Selection>
+              {Object.values(snap.models).map(({ id, type, position }) => (
+                <DraggableModel
+                  key={id}
+                  id={id}
+                  type={type}
+                  position={position}
+                />
+              ))}
             </group>
           </Canvas>
         </div>
@@ -272,6 +260,36 @@ export default function App() {
             />
             Show Z Axis
           </label>
+        </div>
+      </div>
+      <input type="checkbox" id="asset-picker-modal" className="modal-toggle" />
+      <div className="modal z-50">
+        <div className="modal-box max-w-2xl bg-[#2A2A2A]">
+          <h3 className="font-bold text-lg text-white mb-4">Choose an Asset</h3>
+          <div className="grid grid-cols-3 gap-4">
+            {modelList.map((asset) => (
+              <div
+                key={asset.id}
+                className="cursor-pointer bg-[#1E1E1E] hover:bg-[#333] p-3 rounded flex flex-col items-center"
+                onClick={() => {
+                  editorState.addModel(asset.id);
+                  document.getElementById("asset-picker-modal").checked = false;
+                }}
+              >
+                <img
+                  src={asset.thumbnail}
+                  alt={asset.label}
+                  className="w-16 h-16 object-cover rounded mb-1"
+                />
+                <span className="text-xs text-white">{asset.label}</span>
+              </div>
+            ))}
+          </div>
+          <div className="modal-action">
+            <label htmlFor="asset-picker-modal" className="btn">
+              Close
+            </label>
+          </div>
         </div>
       </div>
     </div>

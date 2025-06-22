@@ -1,0 +1,14 @@
+[
+  {
+    "id": "ducktruck",
+    "label": "Duck Truck",
+    "thumbnail": "/thumbnails/ducktruck.png",
+    "glb": "/ducktruck.glb"
+  },
+  {
+    "id": "suzanne",
+    "label": "Monkey Head",
+    "thumbnail": "/thumbnails/monkey.png",
+    "glb": "/monkey.gltf"
+  }
+]

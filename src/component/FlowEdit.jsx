@@ -77,6 +77,7 @@ function FlowEditorContent() {
         panOnScroll={false}
         elementsSelectable={false}
         autoPanOnNodeDrag={false}
+        zoomOnDoubleClick={false}
       >
         <Background />
       </ReactFlow>
