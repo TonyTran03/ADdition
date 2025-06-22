@@ -25,7 +25,9 @@ export default function DraggableModel({
   const dragPlane = useRef(new Plane(new Vector3(0, 1, 0), 0));
   const dragOffset = useRef(new Vector3());
   const [dragging, setDragging] = useState(false);
-
+  const model = snap.models[id];
+  const rotation = model?.rotation || [0, 0, 0];
+  const scale = model?.scale || 1;
   const handleClick = (e) => {
     e.stopPropagation();
     // PICK UP
@@ -98,11 +100,12 @@ export default function DraggableModel({
     <group
       ref={groupRef}
       position={position}
+      rotation={rotation}
       onClick={handleClick}
       onPointerMove={onPointerMove}
     >
       <Select enabled={snap.selectedId === id}>
-        {Component && <Component scale={0.5} />}
+        {Component && <Component scale={scale} />}
       </Select>
     </group>
   );

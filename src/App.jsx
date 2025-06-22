@@ -91,7 +91,7 @@ export default function App() {
       </div>
 
       {/* FlowEditor Panel 2 */}
-      <div className="flex-[1_1_20%] bg-[#2A2A2A] border-r border-[#3D3D3D] p-4">
+      <div className="flex-[1_1_30%] lg:flex-[1_1_20%] bg-[#2A2A2A] border-r border-[#3D3D3D] p-4">
         <div className="w-full text-center text-sm font-medium text-[#E5E7EB] mb-3">
           Code Area
         </div>
@@ -99,7 +99,7 @@ export default function App() {
       </div>
 
       {/* 3D Canvas  3*/}
-      <div className="h-screen w-full flex flex-col bg-[#1E1E1E] border-r border-[#3D3D3D]">
+      <div className="h-screen flex flex-col flex-[1_1_60%] lg:flex-[1_1_auto] bg-[#1E1E1E] border-r border-[#3D3D3D]">
         <div className="p-4 border-b border-[#3D3D3D] bg-[#2A2A2A] flex items-center gap-2 overflow-x-auto">
           {Object.values(snap.models).map(({ id, type }) => {
             const assetInfo = modelList.find((m) => m.id === type);
