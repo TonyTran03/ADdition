@@ -12,6 +12,11 @@ import { editorState } from "./state/valtioStore";
 import { useSnapshot } from "valtio";
 import { Vector3, Plane } from "three";
 import DraggableModel from "./component/DraggableModel.jsx";
+import {
+  Selection,
+  EffectComposer,
+  Outline,
+} from "@react-three/postprocessing";
 
 export default function App() {
   const [activePanel, setActivePanel] = useState("blocks");
@@ -153,14 +158,26 @@ export default function App() {
               <Environment preset="sunset" />
               <CustomOrbitControls />
 
-              {Object.values(snap.models).map(({ id, type, position }) => (
-                <DraggableModel
-                  key={id}
-                  id={id}
-                  type={type}
-                  position={position}
-                />
-              ))}
+              <Selection>
+                {Object.values(snap.models).map(({ id, type, position }) => (
+                  <DraggableModel
+                    key={id}
+                    id={id}
+                    type={type}
+                    position={position}
+                  />
+                ))}
+
+                <EffectComposer multisampling={8} autoClear={false}>
+                  <Outline
+                    visibleEdgeColor="white"
+                    hiddenEdgeColor="gray"
+                    edgeStrength={10} // Try 10–20
+                    width={0.01} // Try 0.01–0.05 for better visibility
+                    blur
+                  />
+                </EffectComposer>
+              </Selection>
             </group>
           </Canvas>
         </div>

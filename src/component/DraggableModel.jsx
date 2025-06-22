@@ -5,7 +5,7 @@ import { Edges } from "@react-three/drei";
 import { editorState } from "../state/valtioStore";
 import { DuckTruck } from "../component/DuckTruck.jsx";
 import { Suzanne } from "../component/Suzanne.jsx";
-
+import { Select } from "@react-three/postprocessing";
 const modelMap = {
   ducktruck: DuckTruck,
   suzanne: Suzanne,
@@ -101,8 +101,9 @@ export default function DraggableModel({
       onClick={handleClick}
       onPointerMove={onPointerMove}
     >
-      {Component && <Component scale={0.5} />}
-      {snap.selectedId === id && <Edges scale={1} />}
+      <Select enabled={snap.selectedId === id}>
+        {Component && <Component scale={0.5} />}
+      </Select>
     </group>
   );
 }
