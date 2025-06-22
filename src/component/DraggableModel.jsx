@@ -29,6 +29,7 @@ export default function DraggableModel({
   const [hovered, setHovered] = useState(false);
 
   const model = snap.models[id];
+  const metadata = model.metadata;
   const rotation = model?.rotation || [0, 0, 0];
   const scale = model?.scale || 1;
 

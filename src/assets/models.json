@@ -10,5 +10,17 @@
     "label": "Monkey Head",
     "thumbnail": "/thumbnails/monkey.png",
     "glb": "/suzanne.gltf"
+  },
+    {
+    "id": "emptybox",
+    "label": "Empty Box",
+    "thumbnail": "/thumbnails/emptybox.png",
+    "glb": "/emptybox.glb"
+  },
+    {
+    "id": "shoe",
+    "label": "Shoe",
+    "thumbnail": "/thumbnails/shoe.png",
+    "glb": "/shoe.glb"
   }
 ]
