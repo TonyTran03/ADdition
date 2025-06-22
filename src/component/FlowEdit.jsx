@@ -10,7 +10,10 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { useSnapshot } from "valtio";
 import { editorState } from "../state/valtioStore";
-
+import CustomNode from "./customNode";
+const nodeTypes = {
+  custom: CustomNode,
+};
 const initialNodes = [];
 const initialEdges = [];
 
@@ -78,6 +81,7 @@ function FlowEditorContent() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}

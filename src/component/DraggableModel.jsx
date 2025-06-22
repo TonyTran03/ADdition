@@ -6,6 +6,8 @@ import { editorState } from "../state/valtioStore";
 import { Select } from "@react-three/postprocessing";
 import modelList from "../assets/models.json";
 import confetti from "canvas-confetti";
+import { useFrame, useThree } from "@react-three/fiber";
+
 function parseBlockLogic(blocks) {
   const [event, ...actions] = blocks;
   return { event, actions };
@@ -17,6 +19,8 @@ export default function DraggableModel({
   orbitRef,
   gridSize = 1,
 }) {
+  const { camera } = useThree();
+  const hasTriggeredProximity = useRef(false);
   const snap = useSnapshot(editorState);
   const groupRef = useRef();
   const dragPlane = useRef(new Plane(new Vector3(0, 1, 0), 0));
@@ -69,6 +73,33 @@ export default function DraggableModel({
     });
   };
 
+  useFrame(() => {
+    if (!groupRef.current || hasTriggeredProximity.current) return;
+
+    const distance = camera.position.distanceTo(groupRef.current.position);
+    if (distance < 2.5) {
+      const { event, actions } = parseBlockLogic(eventBlocks);
+      if (event?.data?.type === "onProximity") {
+        hasTriggeredProximity.current = true; // avoid repeated triggers
+        actions.forEach((a) => {
+          switch (a.data?.type) {
+            case "partyMode":
+              confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+              break;
+            case "animation":
+              groupRef.current?.scale.set(1.5, 1.5, 1.5);
+              setTimeout(() => groupRef.current?.scale.set(1, 1, 1), 400);
+              break;
+            case "hideObject":
+              groupRef.current.visible = false;
+              break;
+            default:
+              console.warn("Unhandled proximity action:", a);
+          }
+        });
+      }
+    }
+  });
   const handleClick = (e) => {
     e.stopPropagation();
     if (!dragging) {
@@ -129,7 +160,30 @@ export default function DraggableModel({
       groupRef.current.position.copy(localPos);
     }
   };
+  const runOnHover = () => {
+    const { event, actions } = parseBlockLogic(eventBlocks);
+    if (event?.data?.type !== "onHover") return;
 
+    actions.forEach((a) => {
+      switch (a.data?.type) {
+        case "showDiscount":
+          console.log("✨ Hover discount:", a.data.percentage);
+          break;
+        case "animation":
+          groupRef.current?.scale.set(1.1, 1.1, 1.1);
+          setTimeout(() => groupRef.current?.scale.set(1, 1, 1), 300);
+          break;
+        case "hideObject":
+          groupRef.current.visible = false;
+          break;
+        case "partyMode":
+          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          break;
+        default:
+          console.warn("Unhandled hover action:", a);
+      }
+    });
+  };
   return (
     <group
       ref={groupRef}
@@ -137,6 +191,11 @@ export default function DraggableModel({
       rotation={rotation}
       onClick={handleClick}
       onPointerMove={onPointerMove}
+      onPointerEnter={() => {
+        setHovered(true);
+        runOnHover();
+      }}
+      onPointerLeave={() => setHovered(false)}
     >
       <Select enabled={snap.selectedId === id}>
         <primitive object={scene} scale={scale} />

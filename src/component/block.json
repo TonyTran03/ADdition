@@ -11,6 +11,7 @@
     { "id": "showText", "label": "Show Text", "category": "Action" },
     { "id": "showDiscount", "label": "Show Discount", "category": "Action",  "percentage": "20%" },
     { "id": "hideObject", "label": "Hide Object", "category": "Action" },
-    { "id": "partyMode", "label": "Party Mode", "category": "Action" } 
+    { "id": "partyMode", "label": "Party Mode", "category": "Action" },
+     { "id": "sound", "label": "Play Sound", "category": "Action" }
   ]
 }

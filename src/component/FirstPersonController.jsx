@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 const SPEED = 6;
-const [editingNode, setEditingNode] = useState(null);
-const [newValue, setNewValue] = useState("");
+
 export default function FirstPersonController({ active }) {
   const keys = useRef({});
   const velocity = useRef(new THREE.Vector3());
