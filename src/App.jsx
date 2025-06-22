@@ -37,10 +37,15 @@ export default function App() {
     pos[axis] = parseFloat(value);
     editorState.updatePosition(pos);
   };
-
   const updateRotation = (axis, value) => {
     if (!selectedId) return;
-    editorState.updateRotation(axis, parseFloat(value));
+
+    let degrees = parseFloat(value);
+    // Wrap around to 0–360
+    degrees = ((degrees % 360) + 360) % 360;
+
+    const radians = (degrees * Math.PI) / 180;
+    editorState.updateRotation(axis, radians);
   };
 
   const updateScale = (value) => {
@@ -224,7 +229,13 @@ export default function App() {
                   <span className="w-4 text-center text-[#9CA3AF]">{axis}</span>
                   <input
                     type="number"
-                    value={selectedModel?.rotation?.[i] ?? 0}
+                    value={
+                      selectedModel?.rotation?.[i]
+                        ? ((selectedModel.rotation[i] * 180) / Math.PI).toFixed(
+                            2
+                          )
+                        : 0
+                    }
                     onChange={(e) => updateRotation(i, e.target.value)}
                     className="flex-1 bg-[#1E1E1E] border border-[#3D3D3D] rounded text-sm px-2 py-1"
                   />
