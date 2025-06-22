@@ -3,12 +3,12 @@ export default function NavBar({ onEnterPointerLock }) {
     <div className="w-full bg-[#121212] text-[#E5E7EB] h-14 flex items-center justify-between px-4 border-b border-[#2D2D2D]">
       {/* Logo */}
       <div className="flex items-center">
-        <img src="/ADdition.svg" alt="Canvas Logo" className="w-6 h-6" />
-        <img
-          src="/textlogowhite.png"
+        <img src="/ADdition.svg" alt="Canvas Logo" className="w-6 h-6 ml-3" />
+        {/* <img
+          src="/textlogowhite.svg"
           alt="ADdition"
           className="h-12 w-auto object-contain"
-        />
+        /> */}
       </div>
 
       {/* Buttons */}
