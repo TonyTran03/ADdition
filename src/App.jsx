@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
 import { Environment, Edges, TransformControls } from "@react-three/drei";
@@ -13,6 +13,7 @@ import { useSnapshot } from "valtio";
 import { Vector3, Plane } from "three";
 import DraggableModel from "./component/DraggableModel.jsx";
 import modelList from "./assets/models.json";
+import { Pencil } from "lucide-react";
 
 export default function App() {
   const [activePanel, setActivePanel] = useState("blocks");
@@ -22,6 +23,7 @@ export default function App() {
     y: true,
     z: true,
   });
+  const [modalName, setModalName] = useState("");
 
   const snap = useSnapshot(editorState);
 
@@ -46,9 +48,14 @@ export default function App() {
     editorState.updateScale(parseFloat(value));
   };
 
+  useEffect(() => {
+    if (selectedModel?.name) {
+      setModalName(selectedModel.name);
+    }
+  }, [selectedModel?.id]);
   return (
     <div className="w-full h-screen flex bg-[#1E1E1E] text-[#E5E7EB] font-sans text-sm">
-      {/* Left Panel */}
+      {/* Left Panel 1 */}
       <div className="flex flex-col flex-[1_1_20%] bg-[#2A2A2A] border-r border-[#3D3D3D]">
         <SidePanelToggle
           activePanel={activePanel}
@@ -89,7 +96,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* FlowEditor Panel */}
+      {/* FlowEditor Panel 2 */}
       <div className="flex-[1_1_20%] bg-[#2A2A2A] border-r border-[#3D3D3D] p-4">
         <div className="w-full text-center text-sm font-medium text-[#E5E7EB] mb-3">
           Code Area
@@ -97,7 +104,7 @@ export default function App() {
         <FlowEditor />
       </div>
 
-      {/* 3D Canvas */}
+      {/* 3D Canvas  3*/}
       <div className="h-screen w-full flex flex-col bg-[#1E1E1E] border-r border-[#3D3D3D]">
         <div className="p-4 border-b border-[#3D3D3D] bg-[#2A2A2A] flex items-center gap-2 overflow-x-auto">
           {Object.values(snap.models).map(({ id, type }) => {
@@ -117,7 +124,9 @@ export default function App() {
                   alt={type}
                   className="w-10 h-10 object-cover rounded"
                 />
-                <span className="text-xs text-white">{assetInfo?.label}</span>
+                <span className="text-xs text-white truncate max-w-[5rem]">
+                  {snap.models[id]?.name || assetInfo?.label}
+                </span>
               </div>
             );
           })}
@@ -174,6 +183,25 @@ export default function App() {
         {/* Transform Panel */}
         <div className="p-4 border-b border-[#3D3D3D] space-y-4">
           <h3 className="text-sm font-medium">Transform</h3>
+
+          {/* Rename Button */}
+          {selectedModel && (
+            <div className="space-y-1">
+              <p className="text-xs text-[#9CA3AF]">Name</p>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm truncate">
+                  {selectedModel.name || "Untitled"}
+                </span>
+                <label
+                  htmlFor="rename-model-modal"
+                  className="cursor-pointer text-[#9CA3AF] hover:text-white"
+                  title="Rename"
+                >
+                  <Pencil size={14} />
+                </label>
+              </div>
+            </div>
+          )}
 
           {/* Position */}
           <div className="space-y-1">
@@ -288,6 +316,32 @@ export default function App() {
           <div className="modal-action">
             <label htmlFor="asset-picker-modal" className="btn">
               Close
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <input type="checkbox" id="rename-model-modal" className="modal-toggle" />
+      <div className="modal z-50">
+        <div className="modal-box bg-[#2A2A2A]">
+          <h3 className="font-bold text-lg text-white mb-4">Rename Model</h3>
+          <input
+            type="text"
+            className="w-full bg-[#1E1E1E] border border-[#3D3D3D] rounded px-2 py-1 text-sm text-white"
+            value={modalName}
+            onChange={(e) => setModalName(e.target.value)}
+          />
+          <div className="modal-action">
+            <label
+              htmlFor="rename-model-modal"
+              className="btn"
+              onClick={() => {
+                if (selectedModel && modalName.trim()) {
+                  editorState.renameModel(modalName.trim());
+                }
+              }}
+            >
+              Confirm
             </label>
           </div>
         </div>
