@@ -9,8 +9,8 @@
   "actionBlocks": [
     { "id": "animation", "label": "Animation", "category": "Action" },
     { "id": "showText", "label": "Show Text", "category": "Action" },
-    { "id": "showDiscount", "label": "Show Discount", "category": "Action" },
+    { "id": "showDiscount", "label": "Show Discount", "category": "Action",  "percentage": "20%" },
     { "id": "hideObject", "label": "Hide Object", "category": "Action" },
-    { "id": "soundEffects", "label": "Sound Effects", "category": "Action" }
+    { "id": "partyMode", "label": "Party Mode", "category": "Action" } 
   ]
 }

@@ -5,7 +5,11 @@ import { Html, useGLTF } from "@react-three/drei";
 import { editorState } from "../state/valtioStore";
 import { Select } from "@react-three/postprocessing";
 import modelList from "../assets/models.json";
-
+import confetti from "canvas-confetti";
+function parseBlockLogic(blocks) {
+  const [event, ...actions] = blocks;
+  return { event, actions };
+}
 export default function DraggableModel({
   id,
   type,
@@ -26,6 +30,44 @@ export default function DraggableModel({
 
   const meta = modelList.find((m) => m.id === type);
   const { scene } = useGLTF(meta?.glb || "");
+  const eventBlocks = model.metadata?.blocks || [];
+
+  const runOnClick = () => {
+    const { event, actions } = parseBlockLogic(eventBlocks);
+    if (event?.data?.type !== "onClick") return;
+
+    actions.forEach((a) => {
+      switch (a.data?.type) {
+        case "showDiscount":
+          console.log("🛒 Showing discount:", a.data.percentage);
+          break;
+
+        case "animation":
+          groupRef.current?.scale.set(1.2, 1.2, 1.2);
+          setTimeout(() => groupRef.current?.scale.set(1, 1, 1), 300);
+          break;
+
+        case "hideObject":
+          if (groupRef.current) {
+            groupRef.current.visible = false;
+            console.log("🙈 Object hidden");
+          }
+          break;
+
+        case "partyMode":
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+          });
+
+          break;
+
+        default:
+          console.warn("Unhandled block:", a);
+      }
+    });
+  };
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -74,6 +116,7 @@ export default function DraggableModel({
       setDragging(false);
       if (orbitRef?.current) orbitRef.current.enabled = true;
     }
+    runOnClick();
   };
 
   const onPointerMove = (e) => {

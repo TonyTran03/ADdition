@@ -54,7 +54,10 @@ function FlowEditorContent() {
         id,
         type: "default",
         position,
-        data: { label: block.label },
+        data: {
+          ...block, // flatten all top-level props
+          type: block.id,
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
