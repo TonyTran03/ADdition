@@ -1,3 +1,6 @@
+import { useSnapshot } from "valtio";
+import { editorState } from "../state/valtioStore";
+
 export default function SidePanelToggle({ activePanel, onPanelChange }) {
   return (
     <div className="flex  space-y-2 p-4">

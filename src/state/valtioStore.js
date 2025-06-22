@@ -16,7 +16,9 @@ export const editorState = proxy({
       position: [0, 0, 0],
       rotation: [0, 0, 0],
       scale: 1,
-      metadata: {},
+      metadata: {
+      blocks: [], //empty array boxes
+      },
     };
 
     this.selectedId = id;
@@ -54,4 +56,11 @@ export const editorState = proxy({
       this.models[this.selectedId].name = newName;
     }
   },
+
+addBlockToModel(block) {
+  if (!this.selectedId || !this.models[this.selectedId]) return;
+  this.models[this.selectedId].metadata.blocks.push(block);
+}
+
+
 });

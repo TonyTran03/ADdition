@@ -68,10 +68,7 @@ export default function App() {
                 className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
                 draggable
                 onDragStart={(e) =>
-                  e.dataTransfer.setData(
-                    "application/reactflow",
-                    "I lay in my bed"
-                  )
+                  e.dataTransfer.setData("application/reactflow", "On Click")
                 }
               >
                 On Click
@@ -80,10 +77,7 @@ export default function App() {
                 className="cursor-pointer p-2 bg-[#1E1E1E] border border-[#3D3D3D] rounded-sm hover:bg-[#2A2A2A] transition"
                 draggable
                 onDragStart={(e) =>
-                  e.dataTransfer.setData(
-                    "application/reactflow",
-                    "cry myself to sleep"
-                  )
+                  e.dataTransfer.setData("application/reactflow", "Show Text")
                 }
               >
                 Show Text

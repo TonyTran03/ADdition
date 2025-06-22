@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import ReactFlow, {
   addEdge,
   Background,
@@ -8,11 +8,22 @@ import ReactFlow, {
   ReactFlowProvider,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import { useSnapshot } from "valtio";
+import { editorState } from "../state/valtioStore";
 
 const initialNodes = [];
 const initialEdges = [];
 
 function FlowEditorContent() {
+  const snap = useSnapshot(editorState);
+
+  useEffect(() => {
+    if (snap.selectedId && snap.models[snap.selectedId]) {
+      const blocks = snap.models[snap.selectedId].metadata.blocks;
+      setNodes(blocks || []);
+      setEdges([]); // optionally reset edges per model
+    }
+  }, [snap.selectedId]);
   const wrapperRef = useRef(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -31,25 +42,24 @@ function FlowEditorContent() {
       if (!type || !wrapperRef.current) return;
 
       const bounds = wrapperRef.current.getBoundingClientRect();
-
-      const centerOffset = {
-        x: 75, // half width
-        y: 20, // half height
-      };
-
+      const centerOffset = { x: 75, y: 20 };
       const position = project({
         x: event.clientX - bounds.left - centerOffset.x,
         y: event.clientY - bounds.top - centerOffset.y,
       });
 
+      const id = `${+new Date()}`;
       const newNode = {
-        id: `${+new Date()}`,
+        id,
         type: "default",
         position,
         data: { label: `${type} Node` },
       };
 
       setNodes((nds) => nds.concat(newNode));
+
+      // Add node to selected model's metadata.blocks
+      editorState.addBlockToModel(newNode);
     },
     [project, setNodes]
   );
@@ -70,7 +80,6 @@ function FlowEditorContent() {
         onDrop={onDrop}
         onDragOver={onDragOver}
         style={{ width: "100%", height: "100%" }}
-        // fitView
         panOnDrag={false}
         zoomOnScroll={false}
         zoomOnPinch={false}
@@ -81,6 +90,13 @@ function FlowEditorContent() {
       >
         <Background />
       </ReactFlow>
+
+      {/* 👇 Overlay message if no blocks */}
+      {nodes.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center text-xs text-[#9CA3AF] pointer-events-none">
+          Place a block here to start dragging
+        </div>
+      )}
     </div>
   );
 }
