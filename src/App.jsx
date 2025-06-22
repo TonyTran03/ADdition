@@ -16,6 +16,12 @@ import DraggableModel from "./component/DraggableModel.jsx";
 export default function App() {
   const [activePanel, setActivePanel] = useState("blocks");
   const [selectedModelId, setSelectedModelId] = useState("ducktruck");
+  const [axisVisibility, setAxisVisibility] = useState({
+    x: true,
+    y: true,
+    z: true,
+  });
+
   const snap = useSnapshot(editorState);
 
   const selectedId = snap.selectedId;
@@ -132,7 +138,11 @@ export default function App() {
                 args={[32, 16, "#444", "#888"]}
                 rotation={[0, 0, 0]}
               />
-              <DepthAxis length={16} color="white" />
+              <DepthAxis
+                length={16}
+                color="white"
+                visibility={axisVisibility}
+              />
               <ambientLight intensity={0.5} />
               <directionalLight
                 position={[10, 10, 5]}
@@ -155,79 +165,97 @@ export default function App() {
           </Canvas>
         </div>
       </div>
+      <div className="flex flex-col flex-[1_1_20%] bg-[#2A2A2A] border-l border-[#3D3D3D]">
+        {/* Transform Panel */}
+        <div className="p-4 border-b border-[#3D3D3D] space-y-4">
+          <h3 className="text-sm font-medium">Transform</h3>
 
-      {/* Properties Panel */}
-      <div className="flex-[1_1_20%] bg-[#2A2A2A] p-4 border-l border-[#3D3D3D]">
-        <h3 className="text-sm font-medium mb-2">Properties</h3>
-        {!selectedModel && <p className="text-xs">Select a model to edit.</p>}
-        {selectedModel && (
-          <div className="space-y-2 text-xs">
-            <div>
-              <label className="block">Position X:</label>
-              <input
-                type="number"
-                value={selectedModel.position[0]}
-                onChange={(e) => updatePosition(0, e.target.value)}
-                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block">Position Y:</label>
-              <input
-                type="number"
-                value={selectedModel.position[1]}
-                onChange={(e) => updatePosition(1, e.target.value)}
-                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block">Position Z:</label>
-              <input
-                type="number"
-                value={selectedModel.position[2]}
-                onChange={(e) => updatePosition(2, e.target.value)}
-                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block">Rotation X:</label>
-              <input
-                type="number"
-                value={selectedModel.rotation ? selectedModel.rotation[0] : 0}
-                onChange={(e) => updateRotation(0, e.target.value)}
-                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block">Rotation Y:</label>
-              <input
-                type="number"
-                value={selectedModel.rotation ? selectedModel.rotation[1] : 0}
-                onChange={(e) => updateRotation(1, e.target.value)}
-                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block">Rotation Z:</label>
-              <input
-                type="number"
-                value={selectedModel.rotation ? selectedModel.rotation[2] : 0}
-                onChange={(e) => updateRotation(2, e.target.value)}
-                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block">Scale:</label>
-              <input
-                type="number"
-                step="0.1"
-                value={selectedModel.scale ?? 1}
-                onChange={(e) => updateScale(e.target.value)}
-                className="w-full bg-[#1E1E1E] border border-[#3D3D3D] p-1 rounded text-sm"
-              />
+          {/* Position */}
+          <div className="space-y-1">
+            <p className="text-xs text-[#9CA3AF]">Position</p>
+            <div className="space-y-1">
+              {["X", "Y", "Z"].map((axis, i) => (
+                <div key={`pos-${axis}`} className="flex items-center gap-2">
+                  <span className="w-4 text-center text-[#9CA3AF]">{axis}</span>
+                  <input
+                    type="number"
+                    value={selectedModel?.position?.[i] ?? 0}
+                    onChange={(e) => updatePosition(i, e.target.value)}
+                    className="flex-1 bg-[#1E1E1E] border border-[#3D3D3D] rounded text-sm px-2 py-1"
+                  />
+                </div>
+              ))}
             </div>
           </div>
-        )}
+
+          {/* Rotation */}
+          <div className="space-y-1">
+            <p className="text-xs text-[#9CA3AF]">Rotation</p>
+            <div className="space-y-1">
+              {["X", "Y", "Z"].map((axis, i) => (
+                <div key={`rot-${axis}`} className="flex items-center gap-2">
+                  <span className="w-4 text-center text-[#9CA3AF]">{axis}</span>
+                  <input
+                    type="number"
+                    value={selectedModel?.rotation?.[i] ?? 0}
+                    onChange={(e) => updateRotation(i, e.target.value)}
+                    className="flex-1 bg-[#1E1E1E] border border-[#3D3D3D] rounded text-sm px-2 py-1"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Uniform Scale */}
+          <div className="space-y-1">
+            <p className="text-xs text-[#9CA3AF]">Scale</p>
+            <input
+              type="number"
+              step="0.1"
+              value={selectedModel?.scale ?? 1}
+              onChange={(e) => updateScale(e.target.value)}
+              className="w-full bg-[#1E1E1E] border border-[#3D3D3D] rounded text-sm px-2 py-1"
+            />
+          </div>
+        </div>
+
+        {/* Axis Visibility - Pinned at Bottom */}
+        <div className="p-4 border-t border-[#3D3D3D] space-y-2 text-xs">
+          <p className="font-medium mb-1">Axis Visibility</p>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={axisVisibility.x}
+              onChange={(e) =>
+                setAxisVisibility((v) => ({ ...v, x: e.target.checked }))
+              }
+              className="toggle toggle-error"
+            />
+            Show X Axis
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={axisVisibility.y}
+              onChange={(e) =>
+                setAxisVisibility((v) => ({ ...v, y: e.target.checked }))
+              }
+              className="toggle toggle-success"
+            />
+            Show Y Axis
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={axisVisibility.z}
+              onChange={(e) =>
+                setAxisVisibility((v) => ({ ...v, z: e.target.checked }))
+              }
+              className="toggle toggle-info"
+            />
+            Show Z Axis
+          </label>
+        </div>
       </div>
     </div>
   );

@@ -54,12 +54,26 @@ export default function DraggableModel({
         const worldPos = intersect.sub(dragOffset.current);
         // convert to local
         const localPos = groupRef.current.parent.worldToLocal(worldPos.clone());
-        // snap to grid
-        const snapped = [
-          Math.round(localPos.x / gridSize) * gridSize,
-          Math.round(localPos.y / gridSize) * gridSize,
-          Math.round(localPos.z / gridSize) * gridSize,
-        ];
+        // Snap X and Z to grid
+        const snappedX = Math.round(localPos.x / gridSize) * gridSize;
+        const snappedZ = Math.round(localPos.z / gridSize) * gridSize;
+
+        // Stack logic: find how many models occupy this X/Z pair
+        let stackHeight = 0;
+        Object.values(snap.models).forEach((model) => {
+          if (
+            model.id !== id && // don't compare with self
+            Math.round(model.position[0] / gridSize) * gridSize === snappedX &&
+            Math.round(model.position[2] / gridSize) * gridSize === snappedZ
+          ) {
+            stackHeight = Math.max(stackHeight, model.position[1] + 1);
+          }
+        });
+
+        // Final snapped position with stackHeight on Y
+        const snapped = [snappedX, stackHeight, snappedZ];
+        groupRef.current.position.set(...snapped);
+        editorState.updatePosition(snapped);
         groupRef.current.position.set(...snapped);
         editorState.updatePosition(snapped);
       }
