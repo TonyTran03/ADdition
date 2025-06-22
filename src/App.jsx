@@ -30,11 +30,17 @@ export default function App() {
   const selectedId = snap.selectedId;
   const selectedModel = selectedId ? snap.models[selectedId] : null;
 
-  // Handlers to update transform
   const updatePosition = (axis, value) => {
     if (!selectedId) return;
     const pos = [...selectedModel.position];
-    pos[axis] = parseFloat(value);
+    let newVal = parseFloat(value);
+
+    // Cap X and Z values to max ±16
+    if ((axis === 0 || axis === 2) && !isNaN(newVal)) {
+      newVal = Math.max(Math.min(newVal, 16), -16); // Cap between -16 and 16
+    }
+
+    pos[axis] = newVal;
     editorState.updatePosition(pos);
   };
   const updateRotation = (axis, value) => {
@@ -105,38 +111,40 @@ export default function App() {
 
       {/* 3D Canvas  3*/}
       <div className="h-screen flex flex-col flex-[1_1_60%] lg:flex-[1_1_auto] bg-[#1E1E1E] border-r border-[#3D3D3D]">
-        <div className="p-4 border-b border-[#3D3D3D] bg-[#2A2A2A] flex items-center gap-2 overflow-x-auto">
-          {Object.values(snap.models).map(({ id, type }) => {
-            const assetInfo = modelList.find((m) => m.id === type);
-            return (
-              <div
-                key={id}
-                onClick={() => editorState.selectModel(id)}
-                className={`cursor-pointer flex flex-col items-center border rounded p-1 transition ${
-                  snap.selectedId === id
-                    ? "border-[#6366F1] bg-[#1E1E1E]"
-                    : "border-[#3D3D3D]"
-                }`}
-              >
-                <img
-                  src={assetInfo?.thumbnail}
-                  alt={type}
-                  className="w-10 h-10 object-cover rounded"
-                />
-                <span className="text-xs text-white truncate max-w-[5rem]">
-                  {snap.models[id]?.name || assetInfo?.label}
-                </span>
-              </div>
-            );
-          })}
+        <div className="p-4 border-b border-[#3D3D3D] bg-[#2A2A2A] overflow-y-auto max-h-48">
+          <div className="flex flex-wrap gap-2">
+            {Object.values(snap.models).map(({ id, type }) => {
+              const assetInfo = modelList.find((m) => m.id === type);
+              return (
+                <div
+                  key={id}
+                  onClick={() => editorState.selectModel(id)}
+                  className={`cursor-pointer flex flex-col items-center border rounded p-1 transition ${
+                    snap.selectedId === id
+                      ? "border-[#6366F1] bg-[#1E1E1E]"
+                      : "border-[#3D3D3D]"
+                  }`}
+                >
+                  <img
+                    src={assetInfo?.thumbnail}
+                    alt={type}
+                    className="w-10 h-10 object-cover rounded"
+                  />
+                  <span className="text-xs text-white truncate max-w-[5rem]">
+                    {snap.models[id]?.name || assetInfo?.label}
+                  </span>
+                </div>
+              );
+            })}
 
-          {/* Add Button - Always at the End */}
-          <label
-            htmlFor="asset-picker-modal"
-            className="flex flex-col items-center justify-center w-10 h-10 border border-dashed border-[#6366F1] text-[#6366F1] hover:bg-[#1E1E1E] rounded cursor-pointer"
-          >
-            +
-          </label>
+            {/* Add Button - Always at the End */}
+            <label
+              htmlFor="asset-picker-modal"
+              className="flex flex-col items-center justify-center w-10 h-10 border border-dashed border-[#6366F1] text-[#6366F1] hover:bg-[#1E1E1E] rounded cursor-pointer"
+            >
+              +
+            </label>
+          </div>
         </div>
 
         <div className="flex-1 relative">

@@ -73,7 +73,10 @@ export default function DraggableModel({
         });
 
         // Final snapped position with stackHeight on Y
-        const snapped = [snappedX, stackHeight, snappedZ];
+        const cappedX = Math.max(Math.min(snappedX, 16), -16);
+        const cappedZ = Math.max(Math.min(snappedZ, 16), -16);
+        const snapped = [cappedX, stackHeight, cappedZ];
+
         groupRef.current.position.set(...snapped);
         editorState.updatePosition(snapped);
         groupRef.current.position.set(...snapped);
