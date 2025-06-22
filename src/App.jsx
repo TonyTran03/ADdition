@@ -19,6 +19,7 @@ import { Pencil } from "lucide-react";
 import NavBar from "./component/NavBar"; // Adjust path if needed
 import FirstPersonController from "./component/FirstPersonController.jsx";
 import BlockPalette from "./component/blockpalette.jsx";
+import GeminiImagePrompt from "./component/GeminiImagePrompt.jsx";
 
 export default function App() {
   const [immersiveMode, setImmersiveMode] = useState(false);
@@ -116,7 +117,9 @@ export default function App() {
           <div className="flex-1 p-4 overflow-auto">
             {activePanel === "blocks" && <BlockPalette />}
             {activePanel === "assets" && (
-              <div className="bg-[#1E1E1E] h-full p-2 rounded">Gemini</div>
+              <div className="bg-[#1E1E1E] h-full p-2 rounded">
+                <GeminiImagePrompt />
+              </div>
             )}
           </div>
         </div>
